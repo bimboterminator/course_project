@@ -1,0 +1,38 @@
+scm:
+    name: qa-python-scm
+
+    scm:
+      - git:
+          url: git@github.com:bimboterminator/course_project.git
+          credentials-id: b83190f0-fee5-4e3a-857c-0520180c2ca9
+          basedir: src/
+          branches:
+            - master
+
+
+- job:
+    name: project_fv1
+    description: "Project\n"
+    project-type: freestyle
+
+    scm:
+      - qa-python-scm
+
+    wrappers:
+      - timestamps
+      - workspace-cleanup
+
+    triggers:
+      - pollscm:
+          cron: '* * * * *'
+
+    builders:
+      - shell: |
+          mkdir -p $WORKSPACE/allure-results
+          cd "src/code/tests/"
+          pytest -s -l -v --alluredir=$WORKSPACE/allure-results ./
+    publishers:
+      - allure:
+          results-path:
+            - path: allure-results
+          report-build-policy: ALWAYS

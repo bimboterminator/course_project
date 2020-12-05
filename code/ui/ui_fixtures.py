@@ -20,6 +20,7 @@ def pytest_addoption(parser):
     parser.addoption('--browser', default='Chrome')
     parser.addoption('--browser_ver', default='latest')
     parser.addoption('--selenoid', default=None)
+    parser.addoption('--network', default=None)
 
 
 @pytest.fixture(scope='session')
@@ -28,15 +29,17 @@ def config(request):
     browser = request.config.getoption('--browser')
     version = request.config.getoption('--browser_ver')
     selenoid = request.config.getoption('--selenoid')
-    return {'browser': browser, 'version': version, 'url': url, 'selenoid': selenoid}
+    network = request.config.getoption('--network')
+    return {'browser': browser, 'version': version, 'url': url, 'selenoid': selenoid, 'network': network}
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='session')
 def driver(config):
     browser = config['browser']
     version = config['version']
     url = config['url']
     selenoid = config['selenoid']
+    network = config['network']
     if not selenoid:
         if browser == 'Chrome':
             manager = ChromeDriverManager(version=version)
@@ -51,8 +54,10 @@ def driver(config):
         options = ChromeOptions()
         capabilities = {'acceptInsecureCerts': True,
                         'browserName': 'chrome',
-                        'version': '86.0'}
+                        'version': '86.0',
+                        'applicationContainers': ["myapp:my-cool-app"]}
         driver = webdriver.Remote(command_executor=selenoid,
+                                  options=options,
                                   desired_capabilities=capabilities)
     driver.get(url)
     driver.maximize_window()
