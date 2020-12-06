@@ -13,7 +13,6 @@ class LoginPage(BasePage):
         self.enter_text(self.locators.PASSWDFIELD, passwd)
         self.click(self.locators.SIGNBUTTON)
 
-
     def login_isDisplayed(self, login):
         try:
             namewrap = self.find(self.locators.LOGINSHOW)
@@ -24,6 +23,7 @@ class LoginPage(BasePage):
             return False
 
     def error_isDisplayed(self):
+        sleep(1)
         try:
             namewrap = self.find(self.locators.ERRORMSG)
             if 'Invalid username or password' == namewrap.text:
@@ -32,6 +32,7 @@ class LoginPage(BasePage):
             return False
 
     def access_denied(self):
+        sleep(2)
         try:
             namewrap = self.find(self.locators.DENIED)
             if 'Ваша учетная запись заблокирована' == namewrap.text:

@@ -1,13 +1,13 @@
 import pytest
 from _pytest.fixtures import FixtureRequest
 import requests
-from time import sleep
 from faker import Faker
 from ui.pages.base_page import BasePage
 from ui.pages.login_page import LoginPage
 from ui.pages.reg_page import RegPage
 from ui.pages.main_page import MainPage
 from vk.settings import SET_USER
+
 
 class BaseCase:
 
@@ -29,7 +29,6 @@ class BaseCase:
 
 
 class Test(BaseCase):
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_auth(self, db_setup):
         new = db_setup.add_user()
@@ -41,15 +40,14 @@ class Test(BaseCase):
         db_setup.delete_user(new.id)
         assert is_displayed
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_auth_neg(self):
         login = Faker().last_name() + '111'
         passwd = '192168'
         self.login_page.auth_with_text(login, passwd)
-        assert self.login_page.error_isDisplayed()
+        is_displayed = self.login_page.error_isDisplayed()
+        assert is_displayed
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_reg_invalid_login_short(self):
         login = 'pepe'
@@ -59,7 +57,6 @@ class Test(BaseCase):
         self.reg_page.reg_with_text(login, email, passwd1, passwd2)
         assert self.reg_page.invalid_login()
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_reg_invalid_login_long(self):
         login = 'pepesadasdasdasdasdasd'
@@ -69,7 +66,6 @@ class Test(BaseCase):
         self.reg_page.reg_with_text(login, email, passwd1, passwd2)
         assert self.reg_page.invalid_login()
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_reg_invalid_email(self):
         login = Faker().last_name() + '666'
@@ -79,7 +75,6 @@ class Test(BaseCase):
         self.reg_page.reg_with_text(login, email, passwd1, passwd2)
         assert self.reg_page.invalid_email()
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_reg_dublicated_email(self, db_setup):
         new = db_setup.add_user()
@@ -87,9 +82,8 @@ class Test(BaseCase):
         email2 = new.email
         self.reg_page.reg_with_text(login2, email2, new.password, new.password)
         db_setup.delete_user(new.id)
-        assert self.reg_page.email_exists(), "Wrong message: Internal server error, should be: email already exists"
+        assert 'Such email already exists' == self.reg_page.email_exists(), "Wrong message: Internal server error, should be: email already exists"
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_reg_dublicated_username(self, db_setup):
         new = db_setup.add_user()
@@ -97,7 +91,6 @@ class Test(BaseCase):
         db_setup.delete_user(new.id)
         assert self.reg_page.user_exists()
 
-    #@pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_reg_passw_notmatch(self):
         login = Faker().first_name() + '666'
@@ -107,7 +100,6 @@ class Test(BaseCase):
         self.reg_page.reg_with_text(login, email, passwd1, passwd2)
         assert self.reg_page.pass_not_match()
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_reg_success(self):
         login = Faker().first_name() + '666'
@@ -117,90 +109,77 @@ class Test(BaseCase):
         self.reg_page.reg_with_text(login, email, passwd1, passwd2)
         assert self.login_page.login_isDisplayed(login)
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_info_api(self, authorize):
         main_page = authorize
         redir = main_page.find_api()
         assert '/wiki/API' in redir
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_info_future(self, authorize):
         main_page = authorize
         redir = main_page.find_future()
         assert '/future-of-the-internet/' in redir
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_info_smtp(self, authorize):
         main_page = authorize
         redir = main_page.find_smtp()
         assert '/wiki/SMTP' in redir
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_home_button(self, authorize):
         main_page = authorize
         assert main_page.home_random_fact()
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_python_redir(self, authorize):
         main_page = authorize
         redir = main_page.python_section()
         assert 'www.python.org' in redir, f"Deviation: {redir}"
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_python_history(self, authorize):
         main_page = authorize
         redir = main_page.history_section()
         assert '/wiki/History_of_Python' in redir, f"Deviation: {redir}"
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_python_flask(self, authorize):
         main_page = authorize
         redir = main_page.flask_section()
         assert 'flask' in redir, f"Deviation: {redir}"
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_linux(self, authorize):
         main_page = authorize
         redir = main_page.linux_section()
         assert 'download/' in redir
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_network_news(self, authorize):
         main_page = authorize
         redir = main_page.news_section()
         assert 'wireshark.org/news/' in redir
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_network_down(self, authorize):
         main_page = authorize
         redir = main_page.download_wireshark()
         assert 'wireshark.org/#download' in redir
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_network_exmp(self, authorize):
         main_page = authorize
         redir = main_page.examples()
         assert '/tcpdump-examples/' in redir
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_logout(self, authorize):
         main_page = authorize
         main_page.logout()
         assert main_page.isOut()
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_vk_id(self, db_setup):
         new = db_setup.add_user()
@@ -208,7 +187,6 @@ class Test(BaseCase):
         self.login_page.auth_with_text(new.username, new.password)
         assert self.main_page.idIsPresent()
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_neg_vk_id(self, db_setup):
         new = db_setup.add_user()
@@ -219,7 +197,6 @@ class Test(BaseCase):
         db_setup.delete_user(new.id)
         assert not res
 
-    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_auth_with_no_access(self, db_setup):
         new = db_setup.add_user(access=False)

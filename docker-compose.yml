@@ -6,12 +6,12 @@ services:
         networks:
             - my-network
         volumes:
-            - ~/Documents/Project/tmp/:/etc/selenoid/
+            - /home/bimbo/Documents/Project/tmp/:/etc/selenoid/
             - /var/run/docker.sock:/var/run/docker.sock
             - /home/bimbo/Documents/:/opt/selenoid/video/
         environment:
             OVERRIDE_VIDEO_OUTPUT_DIR: /home/bimbo/Documents/
-        command: ["-conf", "/etc/selenoid/browsers.json", "-container-network", "my-network", "-service-startup-timeout" , "60s"]
+        command: ["-conf", "/etc/selenoid/browsers.json", "-container-network", "my-network", "-service-startup-timeout" , "120s", "-session-delete-timeout", "90s" , "-timeout" , "120s"]
         ports:
             - "4444:4444"
 
@@ -23,7 +23,7 @@ services:
         ports:
             - "3306:3306"
         volumes:
-            - ~/Documents/Project/tmp/:/docker-entrypoint-initdb.d
+            - /home/bimbo/Documents/Project/tmp/:/docker-entrypoint-initdb.d
         environment:
             MYSQL_ROOT_USER: root
             MYSQL_ROOT_PASSWORD: root
@@ -33,6 +33,7 @@ services:
 
     vk_api:
         image: vk_api:latest
+        container_name: vk
         build: .
         ports:
             - "1052:1052"
@@ -47,7 +48,7 @@ services:
         depends_on:
              - db
         volumes:
-            - ~/Documents/Project/tmp/:/conf_dir
+            - /home/bimbo/Documents/Project/tmp/:/conf_dir
         entrypoint: "/app/myapp --config=/conf_dir/conf"
         links:
             - db

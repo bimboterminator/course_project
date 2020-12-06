@@ -157,6 +157,7 @@ class MainPage(BasePage):
             return "Link is not in a new TAB"
 
     def examples(self):
+        sleep(2)
         try:
             python = self.find(self.locators.NET)
             ActionChains(self.driver).move_to_element(python).perform()
@@ -183,6 +184,7 @@ class MainPage(BasePage):
             return False
 
     def idIsPresent(self):
+        sleep(2)
         try:
             self.find(self.locators.VK)
             return True

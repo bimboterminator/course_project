@@ -17,6 +17,7 @@ class RegPage(BasePage):
         self.click(self.locators.REGISTER)
 
     def invalid_login(self):
+        sleep(2)
         try:
             namewrap = self.find(self.locators.LOGINLENGTH)
 
@@ -27,6 +28,7 @@ class RegPage(BasePage):
             return False
 
     def invalid_email(self):
+        sleep(2)
         try:
             namewrap = self.find(self.locators.WRONGEMAIL)
 
@@ -37,15 +39,17 @@ class RegPage(BasePage):
             return False
 
     def email_exists(self):
+        sleep(2)
         try:
             namewrap = self.find(self.locators.INVEMAIL)
             if 'Such email already exists' == namewrap.text:
-                return True
-            return False
+                return namewrap.text
+            return namewrap.text
         except TimeoutException:
-            return False
+            return ''
 
     def user_exists(self):
+        sleep(2)
         try:
             namewrap = self.find(self.locators.USREX)
             if 'User already exist' == namewrap.text:
@@ -55,6 +59,7 @@ class RegPage(BasePage):
             return False
 
     def pass_not_match(self):
+        sleep(2)
         try:
             namewrap = self.find(self.locators.PASSNOTMATCH)
 
