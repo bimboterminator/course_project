@@ -16,7 +16,7 @@ class UsupportedBrowserException(Exception):
 
 
 def pytest_addoption(parser):
-    parser.addoption('--url', default='http://0.0.0.0:8080/')
+    parser.addoption('--url', default='http://myapp/')
     parser.addoption('--browser', default='Chrome')
     parser.addoption('--browser_ver', default='latest')
     parser.addoption('--selenoid', default=None)
@@ -55,7 +55,8 @@ def driver(config):
         capabilities = {'acceptInsecureCerts': True,
                         'browserName': 'chrome',
                         'version': '86.0',
-                        'applicationContainers': ["myapp:my-cool-app"]}
+                        'applicationContainers': ["myapp"]
+                        }
         driver = webdriver.Remote(command_executor=selenoid,
                                   options=options,
                                   desired_capabilities=capabilities)
