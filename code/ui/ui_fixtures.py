@@ -55,8 +55,7 @@ def driver(config):
         capabilities = {'acceptInsecureCerts': True,
                         'browserName': 'chrome',
                         'version': '86.0',
-                        'applicationContainers': ["myapp"],
-                        'enableVideo': True
+                        'applicationContainers': ["myapp"]
                         }
         driver = webdriver.Remote(command_executor=selenoid,
                                   options=options,

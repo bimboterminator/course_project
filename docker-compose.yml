@@ -8,9 +8,6 @@ services:
         volumes:
             - /home/bimbo/Documents/Project/tmp/:/etc/selenoid/
             - /var/run/docker.sock:/var/run/docker.sock
-            - /home/bimbo/Documents/:/opt/selenoid/video/
-        environment:
-            OVERRIDE_VIDEO_OUTPUT_DIR: /home/bimbo/Documents/
         command: ["-conf", "/etc/selenoid/browsers.json", "-container-network", "my-network", "-service-startup-timeout" , "120s", "-session-delete-timeout", "90s" , "-timeout" , "120s"]
         ports:
             - "4444:4444"
