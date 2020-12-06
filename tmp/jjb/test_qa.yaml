@@ -1,6 +1,5 @@
-scm:
+- scm:
     name: qa-python-scm
-
     scm:
       - git:
           url: git@github.com:bimboterminator/course_project.git
@@ -8,7 +7,6 @@ scm:
           basedir: src/
           branches:
             - master
-
 
 - job:
     name: project_fv1
@@ -30,9 +28,11 @@ scm:
       - shell: |
           mkdir -p $WORKSPACE/allure-results
           docker-compose up -d
-          ????
-          cd "src/code/tests/"
-          pytest -s -l -v --alluredir=$WORKSPACE/allure-results ./
+          cd "src/code/"
+          docker run -d --name testing -v src/code/:/code -v src/tmp/:/tmp --net my-network pytests:latest --selenoid htttp://localhost:4444/wb/hub tests -m UI
+          docker rm - f testing
+          docker run -d --name testing -v src/code/:/code -v src/tmp/:/tmp --net my-network pytests:latest
+          docker-compose down
 
     publishers:
       - allure:
