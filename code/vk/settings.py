@@ -1,7 +1,7 @@
 from urllib.parse import urljoin
 
 
-APP_HOST, APP_PORT = '0.0.0.0', 8080
+APP_HOST, APP_PORT = '0.0.0.0', 5555
 APP_URL = f'http://{APP_HOST}:{APP_PORT}'
 LOGIN_URL = urljoin(APP_URL, 'login')
 REG_URL = urljoin(APP_URL, 'reg')

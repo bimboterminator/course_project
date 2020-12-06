@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver import ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
-
+from time import sleep
 from ui.pages.base_page import BasePage
 from ui.pages.login_page import LoginPage
 from ui.pages.reg_page import RegPage
@@ -16,7 +16,7 @@ class UsupportedBrowserException(Exception):
 
 
 def pytest_addoption(parser):
-    parser.addoption('--url', default='http://myapp/')
+    parser.addoption('--url', default='http://myapp:5555/')
     parser.addoption('--browser', default='Chrome')
     parser.addoption('--browser_ver', default='latest')
     parser.addoption('--selenoid', default=None)
@@ -33,7 +33,7 @@ def config(request):
     return {'browser': browser, 'version': version, 'url': url, 'selenoid': selenoid, 'network': network}
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='function')
 def driver(config):
     browser = config['browser']
     version = config['version']
@@ -55,7 +55,8 @@ def driver(config):
         capabilities = {'acceptInsecureCerts': True,
                         'browserName': 'chrome',
                         'version': '86.0',
-                        'applicationContainers': ["myapp"]
+                        'applicationContainers': ["myapp"],
+                        'enableVideo': True
                         }
         driver = webdriver.Remote(command_executor=selenoid,
                                   options=options,

@@ -1,5 +1,5 @@
 from selenium.common.exceptions import TimeoutException
-
+from time import sleep
 from ui.locators.basic_locators import RegPageLocators
 from ui.pages.base_page import BasePage
 
@@ -13,10 +13,8 @@ class RegPage(BasePage):
         self.enter_text(self.locators.PASSWDFIELD, passwd1)
         self.enter_text(self.locators.REPEAT, passwd2)
         self.enter_text(self.locators.EMAIL, email)
-        if accept:
-            self.click(self.locators.TERMS)
-            self.click(self.locators.REGISTER)
-        self.wait(10)
+        self.click(self.locators.TERMS)
+        self.click(self.locators.REGISTER)
 
     def invalid_login(self):
         try:

@@ -29,8 +29,11 @@ scm:
     builders:
       - shell: |
           mkdir -p $WORKSPACE/allure-results
+          docker-compose up -d
+          ????
           cd "src/code/tests/"
           pytest -s -l -v --alluredir=$WORKSPACE/allure-results ./
+
     publishers:
       - allure:
           results-path:
