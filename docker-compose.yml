@@ -28,7 +28,6 @@ services:
         networks:
             - my-network
 
-
     vk_api:
         image: vk_api:latest
         container_name: vk
