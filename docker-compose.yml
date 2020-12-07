@@ -3,6 +3,7 @@ version: "2.4"
 services:
     selenoid:
         image: aerokube/selenoid:1.10.0
+        container_name: selenoid
         networks:
             - my-network
         volumes:

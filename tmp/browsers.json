@@ -4,8 +4,7 @@
         "versions": {
             "86.0": {
                 "image": "selenoid/chrome:86.0",
-                "port": "4444",
-                "path": "/"
+                "port": "4444"
             }
         }
     }

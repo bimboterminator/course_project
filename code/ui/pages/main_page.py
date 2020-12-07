@@ -37,6 +37,7 @@ class MainPage(BasePage):
             return "Link is not in a new TAB"
 
     def find_smtp(self):
+        sleep(2)
         try:
             self.click(self.locators.SMPTHREF)
             sleep(1)
@@ -177,6 +178,7 @@ class MainPage(BasePage):
         self.click(self.locators.LOGOUT)
 
     def isOut(self):
+        sleep(2)
         try:
             self.find(self.locators.SIGNBUTTON)
             return True
