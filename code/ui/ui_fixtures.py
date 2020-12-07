@@ -54,7 +54,7 @@ def driver(config):
         options = ChromeOptions()
         capabilities = {'acceptInsecureCerts': True,
                         'browserName': 'chrome',
-                        'version': '86.0',
+                        'version': '87.0',
                         'applicationContainers': ["myapp"]
                         }
         driver = webdriver.Remote(command_executor=selenoid,
