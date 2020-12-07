@@ -1,4 +1,5 @@
 import pytest
+import allure
 from faker import Faker
 from _pytest.fixtures import FixtureRequest
 from api.api_client import AppClient
@@ -26,14 +27,19 @@ class BaseCase:
 
 
 class TestApp(BaseCase):
+
+    @allure.title("Проверка статуса пользователя при авторизации")
     @pytest.mark.API
     def test_auth_positive(self, new_user):
+        """Sending post request to /login and checking response"""
         new = new_user
         response = self.api_client.login(new.username, new.password)
         assert new.username in response
 
+    @allure.title("Response status for unauthorized")
     @pytest.mark.API
     def test_auth_neg(self):
+        """Sending post request to /login and checking response"""
         username, password = 'new12312', '1231231231'
         response = self.api_client.login(username, password)
         assert response == 'UNAUTHORIZED'
@@ -49,6 +55,8 @@ class TestApp(BaseCase):
 
     @pytest.mark.API
     def test_reg_pos(self):
+        """Формируется Post запрос на /reg с валидными данными.
+            Проверка появления нового пользователя в базе"""
         username = Faker().first_name() + '666'
         email = Faker().email()
         passwd = '192168'
@@ -60,6 +68,8 @@ class TestApp(BaseCase):
 
     @pytest.mark.API
     def test_reg_neg_shortusrname(self):
+        """Провера регистрации с коротким username.
+            Приложение должно возвращать 400"""
         username = '666'
         email = Faker().email()
         passwd = '192168'
@@ -71,6 +81,7 @@ class TestApp(BaseCase):
 
     @pytest.mark.API
     def test_reg_neg_pass_not_match(self):
+        """Запрос на регистрацию с несовпадающими паролями"""
         username = Faker().first_name() + '666'
         email = Faker().email()
         passwd = '192'
@@ -82,6 +93,7 @@ class TestApp(BaseCase):
 
     @pytest.mark.API
     def test_reg_neg_pass_no_terms(self):
+        """Запрос на регистрацию без указания значения terms"""
         username = Faker().first_name() + '666'
         email = Faker().email()
         passwd = '192168'
@@ -93,6 +105,8 @@ class TestApp(BaseCase):
 
     @pytest.mark.API
     def test_reg_dublicated_email(self, new_user):
+        """Запрос на регистрацию с существующим в базе email.
+            Проверка ответа"""
         username = Faker().first_name() + '666'
         email = new_user.email
         passwd = Faker().password()
@@ -105,15 +119,18 @@ class TestApp(BaseCase):
 
     @pytest.mark.API
     def test_is_active_afterlogout(self, new_user):
+        """ Проверка на активность после logout"""
         self.api_client.login(new_user.username, new_user.password)
         current = self.db.user_is_present(new_user.email).active
         self.api_client.logout()
         updated = self.db.user_is_present(new_user.email).active
         assert current == 1 and updated == 0
 
-
+    @allure.title("Проверка ответа сервера при создании аккаунта")
     @pytest.mark.API
     def test_add_user(self, new_user):
+        """Добавление пользователя.
+             Отправка запроса на /add_user Cheking response"""
         granted_user = new_user
         username = Faker().first_name() + '666'
         email = Faker().email()
@@ -134,46 +151,80 @@ class TestApp(BaseCase):
 
     @pytest.mark.API
     def test_add_user_already_exists(self, new_user):
+        """Добавление пользователя с коротким username.
+         Проверка валидации."""
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         response = self.api_client.add_user(granted_user.username, granted_user.email, granted_user.password)
         assert response == 'AlREADY EXTISTS'
 
+    @allure.title("Проверка создания пользователя  с невалидными данными")
     @pytest.mark.API
     def test_add_user_short_username(self, new_user):
+        """Проверка создания пользователя невалидными данными.
+                Запрос по урлу /api/add_user с невалидными данными пользователя, проверка данных в базе.
+                Данные по пользователю в бд должны отсутствовать(пользователь не создан).
+                """
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         username = Faker().lexify(text='??')
         email = Faker().email()
         passwd = Faker().password()
         response = self.api_client.add_user(username, email, passwd)
-        assert not self.db.user_is_present(email), "Wrong: this user was added without validation"
+        assert not self.db.user_is_present(email), f"Wrong: this user was added without validation. Recieved response {response}"
         assert response == 'BAD REQUEST', f"{response}"
 
+    @allure.title("Проверка создания пользователя  с невалидными данными")
     @pytest.mark.API
     def test_add_user_long_username(self, new_user):
+        """Проверка создания пользователя невалидными данными.
+            Запрос по урлу /api/add_user с невалидными данными пользователя, проверка данных в базе.
+            Данные по пользователю в бд должны отсутствовать(пользователь не создан).
+            """
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         username = Faker().lexify(text='?????????????????')
         email = Faker().email()
         passwd = Faker().password()
         response = self.api_client.add_user(username, email, passwd)
-        assert not self.db.user_is_present(email), "Wrong: this user is present"
+        assert not self.db.user_is_present(email), f"Wrong: this user is present. Recieved response {response}"
         assert response == 'BAD REQUEST', f"{response},should be 400"
 
+    @allure.title("Проверка создания пользователя с невалидным email")
+    @pytest.mark.API
+    def test_add_user_invalid_email(self, new_user):
+        """Проверка создания пользователя невалидным email.
+            Запрос по урлу /api/add_user с невалидными данными пользователя, проверка данных в базе.
+            Данные по пользователю в бд должны отсутствовать(пользователь не создан) and response 400
+            """
+        granted_user = new_user
+        self.api_client.login(granted_user.username, granted_user.password)
+        username = Faker().first_name() + '666'
+        email = 'amasd.com'
+        passwd = Faker().password()
+        response = self.api_client.add_user(username, email, passwd)
+        assert not self.db.user_is_present(email), f"Wrong: this user is present. Recieved response {response}"
+        assert response == 'BAD REQUEST', f"{response},should be 400"
+
+    @allure.title("Проверка создания пользователя  с невалидными данными")
     @pytest.mark.API
     def test_add_user_empty_password(self, new_user):
+        """Добавление пользователя с пустым полем пароля.
+        Проверка валидации."""
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         username = Faker().first_name() + '666'
         email = Faker().email()
         passwd = ''
         response = self.api_client.add_user(username, email, passwd)
-        assert not self.db.user_is_present(email), "Wrong: this user was added without validation"
+        assert not self.db.user_is_present(email), f"Wrong: this user was added without validation. Recieved response {response}"
         assert response == 'BAD REQUEST', f"{response}"
 
+    @allure.title("Добавление пользователя с существующим в базе email")
     @pytest.mark.API
     def test_add_user_dublicate_email(self, new_user):
+        """Добавление пользователя с существующим в базе email.
+                Проверка валидации."""
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         username = Faker().first_name() + '666'
@@ -185,6 +236,7 @@ class TestApp(BaseCase):
 
     @pytest.mark.API
     def test_delete_user(self, new_user):
+        """Удаление пользователя. Проверка на отсуствие в базе и статус ответа"""
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         response = self.api_client.delete_user(granted_user.username)
@@ -198,6 +250,7 @@ class TestApp(BaseCase):
 
     @pytest.mark.API
     def test_delete_notExists(self, new_user):
+        """Удаление несущевтующего пользователя. Проверка ответа """
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         response = self.api_client.delete_user(Faker().last_name())
@@ -242,8 +295,13 @@ class TestApp(BaseCase):
         response = self.api_client.block_user(Faker().last_name())
         assert response == 'NOT FOUND'
 
+    @allure.title("Блокировка пользователя во время пребывания на странице")
     @pytest.mark.API
     def test_block_user_active_after(self, new_user):
+        """Блокировка пользователя во время пребывания на странице.
+                Запрос по урлу /api/block_user/<username> с именем пользователя, у каоторого active = 1.
+                Пользователь блокируется и деавторизируется access = 0 active = 0.
+                """
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         before = self.db.user_is_present(granted_user.email).active

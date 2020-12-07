@@ -9,6 +9,7 @@ class MainPage(BasePage):
     locators = MainPageLocators()
 
     def find_api(self):
+        sleep(2)
         try:
             self.click(self.locators.APIHREF)
             sleep(1)
@@ -23,6 +24,7 @@ class MainPage(BasePage):
             return "Link is not in a new TAB"
 
     def find_future(self):
+        sleep(2)
         try:
             self.click(self.locators.FUTUREHREF)
             sleep(1)
@@ -178,7 +180,7 @@ class MainPage(BasePage):
         self.click(self.locators.LOGOUT)
 
     def isOut(self):
-        sleep(2)
+        sleep(3)
         try:
             self.find(self.locators.SIGNBUTTON)
             return True

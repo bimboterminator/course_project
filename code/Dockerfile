@@ -5,4 +5,4 @@ RUN pip install flask
 
 COPY ./vk/vk_api.py ./vk_api
 
-CMD ["python", "vk_api/vk_api.py"]
+CMD ["pyton", "vk_api/vk_api.py"]
