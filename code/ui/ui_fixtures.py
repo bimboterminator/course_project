@@ -57,6 +57,7 @@ def driver(config):
                         'version': '87.0',
                         'applicationContainers': ["myapp"]
                         }
+
         driver = webdriver.Remote(command_executor=selenoid,
                                   options=options,
                                   desired_capabilities=capabilities)

@@ -7,7 +7,7 @@ services:
         networks:
             - my-network
         volumes:
-            - /home/bimbo/Documents/Project/tmp/:/etc/selenoid/
+            - /home/bimbo/Documents/Project/config/:/etc/selenoid/:ro
             - /var/run/docker.sock:/var/run/docker.sock
         command: ["-container-network", "my-network", "-service-startup-timeout" , "120s", "-session-delete-timeout", "90s" , "-timeout" , "120s"]
         ports:
