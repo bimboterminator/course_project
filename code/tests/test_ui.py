@@ -31,6 +31,7 @@ class BaseCase:
 
 
 class Test(BaseCase):
+    #@pytest.mark.skip(reason='no need')
     @allure.title("user authorization")
     @pytest.mark.UI
     def test_auth(self, db_setup):
@@ -46,6 +47,7 @@ class Test(BaseCase):
         db_setup.delete_user(new.id)
         assert is_displayed
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Authorization of non-existent user")
     @pytest.mark.UI
     def test_auth_neg(self):
@@ -57,6 +59,7 @@ class Test(BaseCase):
         is_displayed = self.login_page.error_isDisplayed()
         assert is_displayed
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Registration with short username")
     @pytest.mark.UI
     def test_reg_invalid_login_short(self):
@@ -69,6 +72,7 @@ class Test(BaseCase):
         self.reg_page.reg_with_text(login, email, passwd1, passwd2)
         assert self.reg_page.invalid_login()
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Registration with long username")
     @pytest.mark.UI
     def test_reg_invalid_login_long(self):
@@ -81,6 +85,7 @@ class Test(BaseCase):
         self.reg_page.reg_with_text(login, email, passwd1, passwd2)
         assert self.reg_page.invalid_login()
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Registration with invalid emal")
     @pytest.mark.UI
     def test_reg_invalid_email(self):
@@ -94,6 +99,7 @@ class Test(BaseCase):
         self.reg_page.reg_with_text(login, email, passwd1, passwd2)
         assert self.reg_page.invalid_email()
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Registration with dublicated email")
     @pytest.mark.UI
     def test_reg_dublicated_email(self, db_setup):
@@ -106,6 +112,7 @@ class Test(BaseCase):
         db_setup.delete_user(new.id)
         assert 'Such email already exists' == self.reg_page.email_exists(), "Wrong message: Internal server error, should be: email already exists"
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Registration with dublicated username")
     @pytest.mark.UI
     def test_reg_dublicated_username(self, db_setup):
@@ -116,6 +123,7 @@ class Test(BaseCase):
         db_setup.delete_user(new.id)
         assert self.reg_page.user_exists()
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Registration with non mathching passwords")
     @pytest.mark.UI
     def test_reg_passw_notmatch(self):
@@ -128,6 +136,7 @@ class Test(BaseCase):
         self.reg_page.reg_with_text(login, email, passwd1, passwd2)
         assert self.reg_page.pass_not_match()
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Registration with valid data")
     @pytest.mark.UI
     def test_reg_success(self):
@@ -142,6 +151,7 @@ class Test(BaseCase):
         self.reg_page.reg_with_text(login, email, passwd1, passwd2)
         assert self.login_page.login_isDisplayed(login)
 
+    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_info_api(self, authorize):
         """Корректность ссылки на страницу с API.
@@ -152,6 +162,7 @@ class Test(BaseCase):
         redir = main_page.find_api()
         assert '/wiki/API' in redir
 
+    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_info_future(self, authorize):
         """Корректность ссылки на страницу с информацией о centos.
@@ -162,6 +173,7 @@ class Test(BaseCase):
         redir = main_page.find_future()
         assert '/future-of-the-internet/' in redir
 
+    @pytest.mark.skip(reason='no need')
     @pytest.mark.UI
     def test_main_info_smtp(self, authorize):
         """Корректность ссылки на страницу с SMTP.
@@ -172,6 +184,7 @@ class Test(BaseCase):
         redir = main_page.find_smtp()
         assert '/wiki/SMTP' in redir
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Random fact on home page")
     @pytest.mark.UI
     def test_home_button(self, authorize):
@@ -182,6 +195,7 @@ class Test(BaseCase):
         main_page = authorize
         assert main_page.home_random_fact()
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Python main page")
     @pytest.mark.UI
     def test_main_python_redir(self, authorize):
@@ -193,6 +207,7 @@ class Test(BaseCase):
         redir = main_page.python_section()
         assert 'www.python.org' in redir, f"Deviation: {redir}"
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Python history page")
     @pytest.mark.UI
     def test_main_python_history(self, authorize):
@@ -204,6 +219,7 @@ class Test(BaseCase):
         redir = main_page.history_section()
         assert '/wiki/History_of_Python' in redir, f"Deviation: {redir}"
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Flask info page")
     @pytest.mark.UI
     def test_main_python_flask(self, authorize):
@@ -215,6 +231,7 @@ class Test(BaseCase):
         redir = main_page.flask_section()
         assert 'flask' in redir, f"Deviation: {redir}"
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("CentOS download page")
     @pytest.mark.UI
     def test_main_linux(self, authorize):
@@ -226,6 +243,7 @@ class Test(BaseCase):
         redir = main_page.linux_section()
         assert 'download/' in redir
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Wireshark news")
     @pytest.mark.UI
     def test_main_network_news(self, authorize):
@@ -237,6 +255,7 @@ class Test(BaseCase):
         redir = main_page.news_section()
         assert 'wireshark.org/news/' in redir
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Wireshark download")
     @pytest.mark.UI
     def test_main_network_down(self, authorize):
@@ -248,6 +267,7 @@ class Test(BaseCase):
         redir = main_page.download_wireshark()
         assert 'wireshark.org/#download' in redir
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Wireshark news")
     @pytest.mark.UI
     def test_main_network_exmp(self, authorize):
@@ -259,6 +279,7 @@ class Test(BaseCase):
         redir = main_page.examples()
         assert '/tcpdump-examples/' in redir
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Logout test")
     @pytest.mark.UI
     def test_logout(self, authorize):
@@ -267,6 +288,7 @@ class Test(BaseCase):
         main_page.logout()
         assert main_page.isOut()
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("VK ID is displayed")
     @pytest.mark.UI
     def test_vk_id(self, db_setup):
@@ -276,6 +298,7 @@ class Test(BaseCase):
         self.login_page.auth_with_text(new.username, new.password)
         assert self.main_page.idIsPresent()
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("VK ID is NOT displayed")
     @pytest.mark.UI
     def test_neg_vk_id(self, db_setup):
@@ -288,6 +311,7 @@ class Test(BaseCase):
         db_setup.delete_user(new.id)
         assert not res
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("AUTHORIZATION of blocked user")
     @pytest.mark.UI
     def test_auth_with_no_access(self, db_setup):
@@ -300,6 +324,7 @@ class Test(BaseCase):
         db_setup.delete_user(new.id)
         assert res
 
+    @pytest.mark.skip(reason='no need')
     @allure.title("Масшатбируемость главной страницы")
     @pytest.mark.UI
     def test_window_size(self, authorize):
