@@ -43,6 +43,8 @@ class MysqlOrmBuilder(object):
             return False
 
     def get_user(self, email):
+        session = sessionmaker(bind=self.connection.get_connection())
+        self.connection.session = session()
         usr = self.connection.session.query(Users).filter_by(email=email).first()
         return usr
 
