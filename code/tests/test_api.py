@@ -120,9 +120,9 @@ class TestApp(BaseCase):
     def test_is_active_afterlogout(self, new_user):
         """ Проверка на активность после logout"""
         self.api_client.login(new_user.username, new_user.password)
-        current = self.db.user_is_present(new_user.email).active
+        current = self.db.get_user(new_user.email).active
         self.api_client.logout()
-        updated = self.db.user_is_present(new_user.email).active
+        updated = self.db.get_user(new_user.email).active
         assert current == 1 and updated == 0
 
     @allure.title("Проверка ответа сервера при создании аккаунта")
@@ -267,14 +267,14 @@ class TestApp(BaseCase):
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         response = self.api_client.block_user(granted_user.username)
-        usr = self.db.user_is_present(granted_user.email)
+        usr = self.db.get_user(granted_user.email)
         assert usr.access == 0 and response == 'User was blocked!'
 
     @pytest.mark.API
     def test_block_user_unauthorized(self, new_user):
         granted_user = new_user
         response = self.api_client.block_user(granted_user.username)
-        usr = self.db.user_is_present(granted_user.email)
+        usr = self.db.get_user(granted_user.email)
         assert usr.access == 1 and response == 'UNAUTHORIZED'
 
     @pytest.mark.API
@@ -283,7 +283,7 @@ class TestApp(BaseCase):
         self.api_client.login(granted_user.username, granted_user.password)
         not_granted_user = self.db.add_user(access=False)
         response = self.api_client.block_user(not_granted_user.username)
-        usr = self.db.user_is_present(not_granted_user.email)
+        usr = self.db.get_user(not_granted_user.email)
         self.db.delete_user(usr.id)
         assert usr.access == 0 and response == 'ALREADY BLOCKED'
 
@@ -303,9 +303,9 @@ class TestApp(BaseCase):
                 """
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
-        before = self.db.user_is_present(granted_user.email).active
+        before = self.db.get_user(granted_user.email).active
         response = self.api_client.block_user(granted_user.username)
-        usr = self.db.user_is_present(granted_user.email)
+        usr = self.db.get_user(granted_user.email)
         assert before == 1 and usr.active == 0 and response == 'User was blocked!', "Wrong: stayed active after blocking"
 
     @pytest.mark.API
@@ -313,13 +313,13 @@ class TestApp(BaseCase):
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         response = self.api_client.accept_user(not_granted_user.username)
-        usr = self.db.user_is_present(not_granted_user.email)
+        usr = self.db.get_user(not_granted_user.email)
         assert usr.access == 1 and response == 'User access granted!'
 
     @pytest.mark.API
     def test_accept_user_unauthorized(self, not_granted_user):
         response = self.api_client.accept_user(not_granted_user.username)
-        usr = self.db.user_is_present(not_granted_user.email)
+        usr = self.db.get_user(not_granted_user.email)
         assert usr.access == 0 and response == 'UNAUTHORIZED'
 
     @pytest.mark.API
@@ -327,7 +327,7 @@ class TestApp(BaseCase):
         granted_user = new_user
         self.api_client.login(granted_user.username, granted_user.password)
         response = self.api_client.accept_user(granted_user.username)
-        usr = self.db.user_is_present(granted_user.email)
+        usr = self.db.get_user(granted_user.email)
         assert usr.access == 1 and response == 'ALREADY ACCEPTED'
 
     @pytest.mark.API
