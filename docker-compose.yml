@@ -25,6 +25,10 @@ services:
         environment:
             MYSQL_ROOT_USER: root
             MYSQL_ROOT_PASSWORD: root
+        healthcheck:
+            test: [ "CMD", "mysqladmin", "-uroot", "-proot", "ping", "-h", "127.0.0.1" ]
+            timeout: 30s
+            retries: 10
         networks:
             - my-network
 
@@ -43,7 +47,8 @@ services:
         ports:
             - "5555:5555"
         depends_on:
-             - db
+            db:
+                condition: service_healthy
         volumes:
             - /home/bimbo/Documents/Project/tmp/:/conf_dir
         entrypoint: "/app/myapp --config=/conf_dir/conf"

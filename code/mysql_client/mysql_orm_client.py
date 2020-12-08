@@ -8,7 +8,7 @@ class MysqlOrmConnection(object):
         self.password = password
         self.db_name = db_name
         self.port = 3306
-        self.host = '0.0.0.0'
+        self.host = '127.0.0.1'
 
         self.connection = self.get_connection(db_created=True)
 
