@@ -2,14 +2,13 @@
     name: qa-python-scm
     scm:
       - git:
-          url: git@github.com:bimboterminator/course_project.git
-          credentials-id: b83190f0-fee5-4e3a-857c-0520180c2ca9
+          url: https://github.com/bimboterminator/course_project.git
           basedir: src/
           branches:
             - master
 
 - job:
-    name: project_fv1
+    name: project_kondakov
     description: "Project\n"
     project-type: freestyle
 
@@ -35,7 +34,7 @@
           pytest -s -l -v --selenoid http://localhost:4444/wd/hub --alluredir=$WORKSPACE/allure-results  tests -m UI
           pytest -s -l -v --alluredir=$WORKSPACE/allure-results tests -m API
           cd $WORKSPACE/src
-          docker-compose up -d
+          docker-compose down
 
     publishers:
       - allure:
