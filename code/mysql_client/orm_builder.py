@@ -37,6 +37,7 @@ class MysqlOrmBuilder(object):
         session = sessionmaker(bind=self.connection.get_connection())
         self.connection.session = session()
         usr = self.connection.session.query(Users).filter_by(email=email).first()
+        self.connection.connection.close()
         if usr:
             return True
         else:
@@ -46,6 +47,7 @@ class MysqlOrmBuilder(object):
         session = sessionmaker(bind=self.connection.get_connection())
         self.connection.session = session()
         usr = self.connection.session.query(Users).filter_by(email=email).first()
+        self.connection.connection.close()
         return usr
 
     def get_granted_user(self):
