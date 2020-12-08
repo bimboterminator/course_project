@@ -12,7 +12,8 @@ def mysql_client():
 @pytest.fixture(scope='function')
 def db_setup(mysql_client):
     mysql: MysqlOrmConnection = mysql_client
-    return MysqlOrmBuilder(connection=mysql)
+    yield MysqlOrmBuilder(connection=mysql)
+    mysql.connection.close()
 
 
 @pytest.fixture(scope='function')
