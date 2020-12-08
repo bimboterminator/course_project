@@ -29,7 +29,7 @@
           pip install -r $WORKSPACE/src/code/requirements.txt
           set +e
           cd $WORKSPACE/src
-          docker-compose up -d
+          WD=$WD docker-compose up -d
           cd $WORKSPACE/src/code/
           pytest -s -l -v --selenoid http://localhost:4444/wd/hub --alluredir=$WORKSPACE/allure-results  tests -m UI
           pytest -s -l -v --alluredir=$WORKSPACE/allure-results tests -m API
