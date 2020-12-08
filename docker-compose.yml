@@ -7,7 +7,7 @@ services:
         networks:
             - my-network
         volumes:
-            - $PWD/src/config/:/etc/selenoid/:ro
+            - $WD/config/:/etc/selenoid/:ro
             - /var/run/docker.sock:/var/run/docker.sock
         command: ["-container-network", "my-network", "-service-startup-timeout" , "240s", "-session-delete-timeout", "90s" , "-timeout" , "240s"]
         ports:
@@ -21,7 +21,7 @@ services:
         ports:
             - "3306:3306"
         volumes:
-            - $PWD/src/tmp/:/docker-entrypoint-initdb.d
+            - $WD/tmp/:/docker-entrypoint-initdb.d
         environment:
             MYSQL_ROOT_USER: root
             MYSQL_ROOT_PASSWORD: root
@@ -50,7 +50,7 @@ services:
             db:
                 condition: service_healthy
         volumes:
-            - $PWD/src/tmp/:/conf_dir
+            - $WD/tmp/:/conf_dir
         entrypoint: "/app/myapp --config=/conf_dir/conf"
         links:
             - db
