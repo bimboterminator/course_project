@@ -1,7 +1,7 @@
 # 2020-1-Atom-QA-Python-A-Kondakov
 
 #Мануал к запуску проекта
-#### Исходники в этом ПР, а также в  репозитории https://github.com/bimboterminator/course_project
+#### Исходники  в  репозитории https://github.com/bimboterminator/course_project
 ### 1. Создать  в докере кастомную сеть с названием my-network 
 ### 2. Дженкинс должен быть собран с питоном  на борту, если его нет можно собрать из Dockerfile в диркетории на уровне с папками Project/code u Project/tmp. Также необходим плагин с Allure
 ### 3. Собрать VK MOCK из докер файла, лежащего в директори Project/code
