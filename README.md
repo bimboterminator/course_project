@@ -11,3 +11,10 @@
 
 #### 5. Сбилдить джобу из файла test_qa.yaml в директории Project/tmp/jjb (со своим jenkins.ini разумеется)
 #### Все приготовления совершены
+
+#### Отчет по тестированию в файле report.md
+
+### Пример работы дженкинса
+![image_2021-03-05_15-47-10](https://user-images.githubusercontent.com/53858094/110122658-f27ed500-7dd0-11eb-9a05-f527c4519bb3.png)
+![image_2021-03-05_15-47-41](https://user-images.githubusercontent.com/53858094/110122664-f4489880-7dd0-11eb-95a9-bfa6652555f7.png)
+![image_2021-03-05_15-51-08](https://user-images.githubusercontent.com/53858094/110122748-0d514980-7dd1-11eb-9f83-747c9b57ad9a.png)
